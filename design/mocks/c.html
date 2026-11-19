@@ -1,0 +1,182 @@
+<!doctype html>
+<!-- Direction C, "Dawn poster": the page is a sunrise (navy > plum > sky gradient hero, hard horizon rule, robin on it). Fonts: Instrument Serif (display) + system humanist sans + system mono.
+     Inherently ONE scheme (dark-to-light hero by design, cream below); no prefers-color-scheme variant. Palette: brand sky/sun/ink/robin kept, departs only by adding pre-dawn navy #141a2b and plum #4a2f3a at the top of the sky. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sunup: the standup, without the meeting</title>
+<link rel="icon" href="../../public/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #141a2b; --plum: #4a2f3a; --sky: #f7d9a4; --peach: #eaae8c;
+    --cream: #fef7ea; --ink: #3d3a34; --muted: #8a8578; --robin: #d95d39; --amber: #8a5a1c;
+    --serif: "Instrument Serif", "Newsreader", Georgia, serif;
+    --sans: ui-sans-serif, -apple-system, "Segoe UI", "Helvetica Neue", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--cream); color: var(--ink); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+
+  /* ---------- hero: the sunrise ---------- */
+  .hero { position: relative; min-height: 100svh; min-height: max(100svh, 760px); display: flex; flex-direction: column; }
+  .sky {
+    flex: 1; display: flex; flex-direction: column; padding: 28px clamp(20px, 5vw, 72px) 96px;
+    background: linear-gradient(to bottom, var(--navy) 0%, var(--plum) 42%, var(--peach) 74%, var(--sky) 100%);
+  }
+  nav { display: flex; justify-content: space-between; align-items: baseline; color: var(--cream); }
+  .wordmark { font: 400 1.9rem/1 var(--serif); letter-spacing: .01em; text-decoration: none; }
+  nav ul { display: flex; gap: clamp(16px, 3vw, 36px); list-style: none; padding: 0; font-size: .9rem; letter-spacing: .04em; }
+  nav ul a { text-decoration: none; opacity: .85; }
+  nav ul a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 5px; }
+
+  h1 { font: 400 clamp(3.1rem, 9vw, 9.5rem)/.94 var(--serif); letter-spacing: -.02em; display: flex; flex-direction: column; flex: 1; margin-top: clamp(32px, 7vh, 88px); }
+  h1 .up { color: var(--cream); }
+  h1 .dn { color: var(--ink); margin-top: auto; font-style: italic; }
+
+  .under { max-width: 40rem; margin-top: 28px; color: var(--ink); }
+  .under p { font-size: clamp(1.05rem, 1.5vw, 1.3rem); line-height: 1.5; }
+  .under p b { font-weight: 650; }
+  .cta { margin-top: 20px; display: flex; gap: 22px; flex-wrap: wrap; font-size: .95rem; font-weight: 600; }
+  .cta a { text-underline-offset: 5px; text-decoration-thickness: 2px; text-decoration-color: var(--robin); }
+
+  /* horizon rule with the robin mark sitting on it, left */
+  .horizon { position: relative; height: 3px; background: var(--ink); }
+  .horizon svg { position: absolute; left: clamp(20px, 5vw, 72px); top: 1.5px; width: 120px; height: 80px; transform: translateY(-59px); color: var(--ink); overflow: visible; }
+  .ground { height: 56px; background: var(--cream); }
+
+  /* ---------- feature list: one long column ---------- */
+  main { padding: 0 clamp(20px, 5vw, 72px); }
+  .col { max-width: 46rem; margin: 0 auto; }
+  .eyebrow { font: 600 .78rem/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--amber); }
+  .features { padding: clamp(56px, 9vw, 112px) 0 clamp(48px, 7vw, 88px); }
+  .features h2 { font: 400 clamp(2rem, 4.2vw, 3.2rem)/1.05 var(--serif); margin: 18px 0 clamp(32px, 5vw, 56px); letter-spacing: -.01em; }
+  ol { list-style: none; padding: 0; border-top: 1px solid rgba(61,58,52,.22); }
+  ol li { display: grid; grid-template-columns: 3.2rem 1fr; column-gap: 8px; padding: 26px 0; border-bottom: 1px solid rgba(61,58,52,.22); }
+  ol .n { font: 400 1rem/2.1 var(--mono); color: var(--muted); }
+  ol h3 { font: 400 clamp(1.5rem, 2.6vw, 2rem)/1.15 var(--serif); }
+  ol p { grid-column: 2; margin-top: 6px; color: #5b574f; max-width: 34rem; }
+  ol code { font: .88em var(--mono); color: var(--amber); }
+
+  /* ---------- setup: one quiet block ---------- */
+  .setup { padding: clamp(24px, 4vw, 40px) 0 clamp(72px, 10vw, 128px); }
+  .setup h2 { font: 400 clamp(2rem, 4.2vw, 3.2rem)/1.05 var(--serif); margin: 18px 0 14px; }
+  .setup .lead { color: #5b574f; margin-bottom: 28px; }
+  pre { background: var(--navy); color: #f3e6cf; border-radius: 6px; padding: 26px clamp(18px, 3vw, 32px); overflow-x: auto; font: .88rem/1.85 var(--mono); }
+  pre .c { color: #8c8fa3; }
+  pre .p { color: var(--sky); user-select: none; }
+  .setup .after { margin-top: 24px; font-size: 1.05rem; }
+  .setup .after em { font: italic 1.5rem/1.3 var(--serif); display: block; color: var(--ink); }
+
+  /* ---------- footer ---------- */
+  footer { background: var(--navy); color: #cfc7b5; padding: 28px clamp(20px, 5vw, 72px); font-size: .85rem; }
+  footer .row { max-width: 76rem; margin: 0 auto; display: flex; justify-content: space-between; gap: 12px 32px; flex-wrap: wrap; align-items: center; }
+  footer a { color: var(--cream); text-underline-offset: 4px; }
+  footer .mini { display: flex; align-items: center; gap: 10px; font: 1.3rem/1 var(--serif); color: var(--cream); }
+
+  @media (max-width: 560px) {
+    nav ul { font-size: .82rem; gap: 14px; }
+    .wordmark { font-size: 1.6rem; }
+    .sky { padding-bottom: 88px; }
+    ol li { grid-template-columns: 2.6rem 1fr; }
+    .horizon svg { width: 96px; height: 64px; transform: translateY(-47px); }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="sky">
+    <nav>
+      <a class="wordmark" href="#">sunup</a>
+      <ul>
+        <li><a href="#what">What it does</a></li>
+        <li><a href="#setup">Setup</a></li>
+        <li><a href="https://github.com/briancorbin/sunup">GitHub</a></li>
+      </ul>
+    </nav>
+
+    <h1>
+      <span class="up">The standup,</span>
+      <span class="dn">without the meeting.</span>
+    </h1>
+
+    <div class="under">
+      <p>An open-source Slack app for async daily check-ins that <b>you run yourself</b>: your Cloudflare account, your database, up and running in about 15 minutes. A DailyBot alternative you own.</p>
+      <div class="cta">
+        <a href="#setup">Deploy your own</a>
+        <a href="https://github.com/briancorbin/sunup">Read the source (MIT)</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="horizon" role="presentation">
+    <svg viewBox="0 0 240 160" aria-label="sunup: a robin perched on a rising sun" role="img"><defs><clipPath id="hz"><rect width="240" height="118"/></clipPath><clipPath id="bd"><ellipse cx="0" cy="22" rx="18" ry="15"/></clipPath></defs><g stroke="#f2b544" stroke-width="6" stroke-linecap="round" clip-path="url(#hz)"><line x1="120" y1="30" x2="120" y2="14"/><line x1="72" y1="48" x2="60" y2="36"/><line x1="168" y1="48" x2="180" y2="36"/><line x1="52" y1="92" x2="34" y2="88"/><line x1="188" y1="92" x2="206" y2="88"/></g><path d="M 56 118 A 64 64 0 0 1 184 118 Z" fill="#f2a33c"/><line x1="16" y1="118" x2="224" y2="118" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><g transform="translate(64 72)"><line x1="-4" y1="34" x2="-4" y2="46" stroke="#3d3a34" stroke-width="2.5" stroke-linecap="round"/><line x1="5" y1="34" x2="5" y2="46" stroke="#3d3a34" stroke-width="2.5" stroke-linecap="round"/><path d="M -12 16 L -34 26 L -28 32 L -10 26 Z" fill="#4a4640"/><ellipse cx="0" cy="22" rx="18" ry="15" fill="#4a4640"/><circle cx="11" cy="31" r="15" fill="#d95d39" clip-path="url(#bd)"/><circle cx="12" cy="6" r="10" fill="#4a4640"/><path d="M 16 -1 A 10 10 0 0 1 21 11 L 12 8 Z" fill="#d95d39"/><path d="M 21 4 L 31 7 L 21 10 Z" fill="#e8a33d"/><circle cx="13" cy="3.5" r="1.9" fill="#fffdf7"/></g></svg>
+  </div>
+  <div class="ground"></div>
+</header>
+
+<main>
+  <section class="features col" id="what">
+    <div class="eyebrow">What it does</div>
+    <h2>Nine small things that replace a meeting.</h2>
+    <ol>
+      <li><span class="n">01</span><h3>Check-ins at the right hour</h3>
+        <p>At the time you choose, in each person's own timezone, sunup DMs a short form with questions you configure.</p></li>
+      <li><span class="n">02</span><h3>One tidy digest</h3>
+        <p>At digest time, a single message in the channel summarizes everyone's answers. Late check-ins update it in place.</p></li>
+      <li><span class="n">03</span><h3>Blockers that don't vanish</h3>
+        <p>Each blocker is tracked until resolved: the next prompt asks "still blocked?", the digest shows its age, and App Home keeps a live board.</p></li>
+      <li><span class="n">04</span><h3>Nudges and vacation mode</h3>
+        <p>One reminder before the digest goes out, and <code>/sunup snooze 5</code> when someone is away.</p></li>
+      <li><span class="n">05</span><h3>Kudos</h3>
+        <p><code>/kudos @teammate for shipping the thing</code>, with a 30-day leaderboard.</p></li>
+      <li><span class="n">06</span><h3>An optional mood pulse</h3>
+        <p>A 1-5 question that reports the team average only, and only once three or more people have answered.</p></li>
+      <li><span class="n">07</span><h3>Sundown and the weekly retro</h3>
+        <p><code>/sundown</code> is the evening checkout twin of the morning form, and the weekly retro looks back over the week.</p></li>
+      <li><span class="n">08</span><h3>Reports and export</h3>
+        <p><code>/sunup report</code> makes a charted, signed report page that lasts 24 hours; <code>/sunup export</code> hands you a CSV.</p></li>
+      <li><span class="n">09</span><h3>It reads nothing it isn't given</h3>
+        <p>Four scopes only: <code>chat:write</code>, <code>commands</code>, <code>im:write</code>, <code>users:read</code>. No message-reading. It sees what people type into its own forms.</p></li>
+    </ol>
+  </section>
+
+  <section class="setup col" id="setup">
+    <div class="eyebrow">Setup</div>
+    <h2>Deploy it before your coffee cools.</h2>
+    <p class="lead">Free-tier Cloudflare Workers, or plain Node. Create the Slack app from the bundled manifest, then:</p>
+<pre><span class="c"># deploy</span>
+<span class="p">$</span> git clone https://github.com/briancorbin/sunup &amp;&amp; cd sunup
+<span class="p">$</span> npm install
+<span class="p">$</span> npx wrangler login
+<span class="p">$</span> npx wrangler d1 create sunup
+<span class="p">$</span> npm run db:migrate
+<span class="p">$</span> npm run deploy
+
+<span class="c"># secrets</span>
+<span class="p">$</span> npx wrangler secret put SLACK_BOT_TOKEN
+<span class="p">$</span> npx wrangler secret put SLACK_SIGNING_SECRET
+
+<span class="c"># in Slack</span>
+<span class="p">/</span>invite @Sunup
+<span class="p">/</span>sunup setup
+<span class="p">/</span>sunup join</pre>
+    <p class="after"><em>About 15 minutes.</em> Your Slack app, your Cloudflare account, your database.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="row">
+    <span class="mini">sunup</span>
+    <span>MIT licensed. Made by Best Coast Software LLC, Redondo Beach, CA.</span>
+    <a href="https://github.com/briancorbin/sunup">github.com/briancorbin/sunup</a>
+  </div>
+</footer>
+
+</body>
+</html>

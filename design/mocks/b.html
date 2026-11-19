@@ -1,0 +1,230 @@
+<!doctype html>
+<!-- Direction B: "The digest is the hero" - product-first, faux-Slack message card beside the headline. Fonts: Inter Tight (headline/page chrome) + Lato (Slack UI). -->
+<!-- Palette departure: neutral white / #1a1d21 (auto light+dark via prefers-color-scheme); sunup orange only as accent. Brand mark kept. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sunup - async standup on your own Slack app</title>
+<link rel="icon" href="../../public/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff; --bg-alt:#f8f8f8; --ink:#1d1c1d; --muted:#616061; --line:#e3e3e3;
+  --sun:#f2a33c; --sun-ink:#8a5a1c; --sun-wash:#fef7ea; --red:#d95d39;
+  --card:#ffffff; --card-line:#dddddd; --link:#1264a3; --chip:#f4ede4; --code:#f4f4f4;
+  --blk-bg:#fff6f2; --blk-line:#f1c9bb;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 12px 40px rgba(29,28,29,.10);
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#1a1d21; --bg-alt:#1f2227; --ink:#d1d2d3; --muted:#9a9b9e; --line:#35383d;
+  --sun-ink:#f2b544; --sun-wash:#2a2620;
+  --card:#222529; --card-line:#383b40; --link:#1d9bd1; --chip:#2c2a26; --code:#111316;
+  --blk-bg:#2a2220; --blk-line:#5a3a30;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 16px 48px rgba(0,0,0,.45);
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Inter Tight",system-ui,sans-serif}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+
+/* nav */
+nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:21px;letter-spacing:-.02em;text-decoration:none;color:var(--ink)}
+.brand svg{width:38px;height:auto;color:var(--ink)}
+nav .links{display:flex;gap:22px;font-size:15px;color:var(--muted)}
+nav .links a{text-decoration:none}
+nav .links a:hover{color:var(--ink)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:64px;align-items:center;padding:56px 0 72px}
+.eyebrow{display:inline-block;font-size:13px;font-weight:600;color:var(--sun-ink);background:var(--sun-wash);padding:4px 10px;border-radius:99px;margin-bottom:20px}
+h1{font-size:clamp(38px,5.2vw,62px);line-height:1.02;letter-spacing:-.035em;font-weight:700;margin:0 0 20px}
+h1 em{font-style:normal;box-shadow:inset 0 -.28em 0 rgba(242,163,60,.45)}
+.lede{font-size:18px;color:var(--muted);max-width:30em;margin:0 0 28px}
+.lede b{color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 15px "Inter Tight",sans-serif;padding:12px 20px;border-radius:8px;text-decoration:none;border:1px solid var(--line)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.primary:hover{background:var(--sun);border-color:var(--sun);color:#1d1c1d}
+.btn.ghost:hover{border-color:var(--muted)}
+.fine{font-size:14px;color:var(--muted);margin:0}
+.fine::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--sun);margin-right:8px}
+
+/* slack card (Lato) */
+.slack{font-family:Lato,system-ui,sans-serif;background:var(--card);border:1px solid var(--card-line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;color:var(--ink);font-size:15px;line-height:1.46}
+.s-head{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--card-line);font-weight:900;font-size:15px}
+.s-head small{font-weight:400;color:var(--muted);font-size:13px;margin-left:auto}
+.s-msg{display:flex;gap:10px;padding:14px 16px 16px}
+.bot{flex:none;width:36px;height:36px;border-radius:7px;background:#fef7ea;display:grid;place-items:center;overflow:hidden}
+.bot svg{width:30px;height:auto;margin-top:4px;color:#3d3a34}
+.s-body{min-width:0;flex:1}
+.s-meta{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.s-meta b{font-weight:900}
+.app{font-size:10px;font-weight:900;letter-spacing:.03em;background:var(--chip);color:var(--muted);padding:1px 4px;border-radius:3px;align-self:center}
+.s-meta time{font-size:12px;color:var(--muted)}
+.title{font-weight:900;font-size:17px;margin:6px 0 2px}
+.ctx{font-size:12px;color:var(--muted)}
+hr{border:0;border-top:1px solid var(--card-line);margin:12px 0}
+.person{display:flex;gap:10px}
+.av{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:900;font-size:12px}
+.person b{font-weight:900}
+.q{margin-top:2px}
+.q i{font-style:normal;font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em;display:inline-block;min-width:76px}
+.mention{background:rgba(29,155,209,.13);color:var(--link);padding:0 2px;border-radius:3px}
+.blockers{background:var(--blk-bg);border:1px solid var(--blk-line);border-left:4px solid var(--red);border-radius:6px;padding:10px 12px}
+.blockers b{font-weight:900}
+.age{color:var(--red);font-weight:700}
+.row{display:flex;gap:8px;align-items:baseline}
+.kudos{display:flex;gap:8px}
+
+/* caption */
+.cap{font-size:13px;color:var(--muted);margin:14px 4px 0;text-align:center}
+
+/* sections */
+section{border-top:1px solid var(--line);padding:72px 0}
+section.alt{background:var(--bg-alt)}
+h2{font-size:clamp(26px,3.2vw,36px);letter-spacing:-.03em;line-height:1.1;margin:0 0 10px;font-weight:700}
+.sub{color:var(--muted);margin:0 0 36px;max-width:36em}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);border-radius:12px;background:var(--bg);overflow:hidden}
+.step{padding:24px;border-left:1px solid var(--line);position:relative}
+.step:first-child{border-left:0}
+.step .n{font-size:13px;font-weight:700;color:var(--sun-ink);margin-bottom:6px}
+.step h3{font-size:19px;letter-spacing:-.02em;margin:0 0 6px}
+.step p{margin:0 0 14px;color:var(--muted);font-size:15px}
+pre{margin:0;background:var(--code);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.6;overflow-x:auto;color:var(--ink)}
+pre .c{color:var(--muted)}
+.step:not(:last-child)::after{content:"\2192";position:absolute;right:-11px;top:26px;width:22px;height:22px;border-radius:50%;background:var(--bg);border:1px solid var(--line);display:grid;place-items:center;font-size:12px;color:var(--muted);z-index:1}
+.priv{display:flex;align-items:center;gap:14px 20px;flex-wrap:wrap;margin-top:32px;font-size:15px}
+.priv > span{color:var(--muted)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font:600 13px ui-monospace,"SF Mono",Menlo,monospace;background:var(--chip);color:var(--sun-ink);padding:5px 10px;border-radius:6px}
+.note{width:100%;margin:0;font-size:14px;color:var(--muted)}
+
+footer{border-top:1px solid var(--line);padding:28px 0;font-size:14px;color:var(--muted)}
+footer .wrap{display:flex;justify-content:space-between;gap:12px 24px;flex-wrap:wrap}
+footer a{text-decoration:none}footer a:hover{color:var(--ink)}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;gap:40px;padding-top:24px}
+  .steps{grid-template-columns:1fr}
+  .step{border-left:0;border-top:1px solid var(--line)}
+  .step:first-child{border-top:0}
+  .step:not(:last-child)::after{right:auto;left:24px;top:auto;bottom:-11px;transform:rotate(90deg)}
+}
+@media (max-width:480px){
+  .wrap{padding:0 16px}
+  nav .links a:not(:last-child){display:none}
+  .q i{display:block;min-width:0}
+  .s-msg{padding:12px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="brand" href="#">
+      <svg viewBox="0 0 240 160" aria-hidden="true"><defs><clipPath id="hz"><rect width="240" height="118"/></clipPath><clipPath id="bd"><ellipse cx="0" cy="22" rx="18" ry="15"/></clipPath></defs><g stroke="#f2b544" stroke-width="6" stroke-linecap="round" clip-path="url(#hz)"><line x1="120" y1="30" x2="120" y2="14"/><line x1="72" y1="48" x2="60" y2="36"/><line x1="168" y1="48" x2="180" y2="36"/><line x1="52" y1="92" x2="34" y2="88"/><line x1="188" y1="92" x2="206" y2="88"/></g><path d="M 56 118 A 64 64 0 0 1 184 118 Z" fill="#f2a33c"/><line x1="16" y1="118" x2="224" y2="118" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><g transform="translate(64 72)"><line x1="-4" y1="34" x2="-4" y2="46" stroke="#3d3a34" stroke-width="2.5" stroke-linecap="round"/><line x1="5" y1="34" x2="5" y2="46" stroke="#3d3a34" stroke-width="2.5" stroke-linecap="round"/><path d="M -12 16 L -34 26 L -28 32 L -10 26 Z" fill="#4a4640"/><ellipse cx="0" cy="22" rx="18" ry="15" fill="#4a4640"/><circle cx="11" cy="31" r="15" fill="#d95d39" clip-path="url(#bd)"/><circle cx="12" cy="6" r="10" fill="#4a4640"/><path d="M 16 -1 A 10 10 0 0 1 21 11 L 12 8 Z" fill="#d95d39"/><path d="M 21 4 L 31 7 L 21 10 Z" fill="#e8a33d"/><circle cx="13" cy="3.5" r="1.9" fill="#fffdf7"/></g></svg>
+      sunup
+    </a>
+    <div class="links"><a href="#setup">Setup</a><a href="#privacy">Privacy</a><a href="https://github.com/briancorbin/sunup">GitHub</a></div>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <span class="eyebrow">Open source &middot; MIT &middot; a DailyBot alternative you own</span>
+      <h1>Standup, async. <em>On your own Slack app.</em></h1>
+      <p class="lede">sunup DMs each person a short form at their local morning hour, then posts one tidy digest to your channel. <b>Blockers stay on the board until they're resolved</b>, with their age, so nothing quietly rots.</p>
+      <div class="btns">
+        <a class="btn primary" href="#setup">Deploy your own</a>
+        <a class="btn ghost" href="https://github.com/briancorbin/sunup">GitHub</a>
+      </div>
+      <p class="fine">You run it. There's no hosted service and no "Add to Slack" button.</p>
+    </div>
+
+    <figure style="margin:0">
+      <div class="slack" role="img" aria-label="Example sunup digest in a Slack channel">
+        <div class="s-head"># team-mobile <small>3 members</small></div>
+        <div class="s-msg">
+          <div class="bot"><svg viewBox="0 0 240 160" aria-hidden="true"><path d="M 56 118 A 64 64 0 0 1 184 118 Z" fill="#f2a33c"/><line x1="16" y1="118" x2="224" y2="118" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><g transform="translate(64 72)"><ellipse cx="0" cy="22" rx="18" ry="15" fill="#4a4640"/><circle cx="12" cy="6" r="10" fill="#4a4640"/><path d="M 21 4 L 31 7 L 21 10 Z" fill="#e8a33d"/><circle cx="13" cy="3.5" r="1.9" fill="#fffdf7"/></g></svg></div>
+          <div class="s-body">
+            <div class="s-meta"><b>sunup</b><span class="app">APP</span><time>9:30 AM</time></div>
+            <div class="title">&#9728;&#65039; Daily check-in &middot; Tue</div>
+            <div class="ctx">3 of 4 checked in &middot; Wen is out until Thursday</div>
+            <hr>
+            <div class="person"><div class="av" style="background:#7c3a9e">P</div><div>
+              <b>Priya</b>
+              <div class="q"><i>Yesterday</i>Wired up the new onboarding flow</div>
+              <div class="q"><i>Today</i>Fix the e2e flake, start the settings screen</div>
+              <div class="q"><i>Blockers</i>CI is flaky on e2e</div>
+            </div></div>
+            <hr>
+            <div class="person"><div class="av" style="background:#2b7a5f">S</div><div>
+              <b>Sam</b>
+              <div class="q"><i>Yesterday</i>Reviewed 4 PRs, shipped the push-token fix</div>
+              <div class="q"><i>Today</i>API pagination for the feed</div>
+              <div class="q"><i>Blockers</i>None</div>
+            </div></div>
+            <hr>
+            <div class="person"><div class="av" style="background:#c2562b">M</div><div>
+              <b>Marcus</b>
+              <div class="q"><i>Yesterday</i>Profile screen polish</div>
+              <div class="q"><i>Today</i>Dark mode pass, waiting on the new icons</div>
+              <div class="q"><i>Blockers</i>Need design sign-off from <span class="mention">@Sam</span></div>
+            </div></div>
+            <hr>
+            <div class="blockers">
+              <b>&#128679; Open blockers</b>
+              <div class="row">&bull; Flaky CI on the e2e suite &mdash; <span class="age">blocked 3 days</span>, Priya</div>
+            </div>
+            <div class="ctx" style="margin-top:10px"><b style="font-weight:900">Waiting on:</b> <span class="mention">@Sam</span> (1 item)</div>
+            <hr>
+            <div class="kudos"><span>&#127881;</span><span><b style="font-weight:900">Kudos</b> &middot; Marcus to Priya: "for untangling the release script"</span></div>
+            <div class="ctx" style="margin-top:8px">Sent by sunup &middot; late check-ins update this message in place</div>
+          </div>
+        </div>
+      </div>
+      <figcaption class="cap">A real digest. Yours would live in your channel, from your own instance.</figcaption>
+    </figure>
+  </header>
+</div>
+
+<section class="alt" id="setup">
+  <div class="wrap">
+    <h2>About fifteen minutes, start to finish.</h2>
+    <p class="sub">Cloudflare Workers free tier, or plain Node. Your Slack app, your database, your data.</p>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h3>Deploy the Worker</h3><p>Clone, install, create the database, ship it.</p>
+<pre>npm install
+npx wrangler d1 create sunup
+npm run db:migrate
+npm run deploy</pre></div>
+      <div class="step"><div class="n">2</div><h3>Create the Slack app from the manifest</h3><p>Paste the bundled manifest, then add two secrets.</p>
+<pre>npx wrangler secret put SLACK_BOT_TOKEN
+npx wrangler secret put SLACK_SIGNING_SECRET</pre></div>
+      <div class="step"><div class="n">3</div><h3>Run /sunup setup</h3><p>Invite the bot, pick questions and a time, join.</p>
+<pre>/invite @Sunup
+/sunup setup
+/sunup join</pre></div>
+    </div>
+
+    <div class="priv" id="privacy">
+      <span>Reads no messages. Only the scopes it needs:</span>
+      <div class="chips"><span class="chip">chat:write</span><span class="chip">commands</span><span class="chip">im:write</span><span class="chip">users:read</span></div>
+      <p class="note">sunup only sees what people type into its own forms. <code class="mono">users:read</code> is for timezones.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Best Coast Software LLC &middot; Redondo Beach, CA</span>
+    <span><a href="https://github.com/briancorbin/sunup">GitHub</a> &middot; MIT licensed</span>
+  </div>
+</footer>
+</body>
+</html>

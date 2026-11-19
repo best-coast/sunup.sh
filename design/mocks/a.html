@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>sunup — async daily check-ins for Slack, self-hosted and free</title>
+  <meta name="description" content="sunup is an open-source Slack app for async daily check-ins, channel digests, blocker tracking and kudos. Self-hosted on Cloudflare's free tier or plain Node. No message-reading scopes, no per-seat pricing.">
+  <link rel="canonical" href="https://sunup.sh/">
+  <link rel="icon" href="../../public/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="author" content="Best Coast Software LLC">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="sunup — async daily check-ins for Slack">
+  <meta property="og:description" content="Self-hosted, open source, free forever. A DailyBot alternative you own.">
+  <meta property="og:url" content="https://sunup.sh/">
+  <meta property="og:image" content="https://sunup.sh/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#fef7ea" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1a17" media="(prefers-color-scheme: dark)">
+  <style>
+    :root {
+      color-scheme: light;
+      --sky-top: #fef7ea; --sky-bottom: #f7d9a4;
+      --bg: #fffaf1; --panel: #fff; --panel-rule: rgba(61,58,52,.12);
+      --ink: #3d3a34; --muted: #8a8578; --sun: #f2a33c; --ray: #f2b544; --robin: #d95d39; --amber: #8a5a1c;
+      --code-bg: #2b2823; --code-fg: #f1ebe0; --code-dim: #9a9389;
+      --sans: "Avenir Next", "Avenir", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --sky-top: #1c1a17; --sky-bottom: #3a2a1a;
+        --bg: #1c1a17; --panel: #262320; --panel-rule: rgba(241,235,224,.12);
+        --ink: #f1ebe0; --muted: #a39c8f; --amber: #f2b544;
+        --code-bg: #0f0e0c; --code-fg: #f1ebe0; --code-dim: #7d776c;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 2px; text-decoration-color: var(--sun); }
+    a:hover { text-decoration-thickness: 3px; }
+    code { font-family: var(--mono); font-size: .88em; background: rgba(242,163,60,.18); padding: 1px 6px; border-radius: 5px; }
+    pre { margin: 0; background: var(--code-bg); color: var(--code-fg); border-radius: 10px; padding: 16px 18px; font-family: var(--mono); font-size: 14px; line-height: 1.6; overflow-x: auto; }
+    pre code { background: none; padding: 0; font-size: inherit; }
+    pre .c { color: var(--code-dim); }
+    pre .p { color: var(--ray); user-select: none; }
+    .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+
+    /* hero: the sky */
+    header.sky { background: linear-gradient(var(--sky-top), var(--sky-bottom)); border-bottom: 6px solid var(--ink); }
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; }
+    nav .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 22px; letter-spacing: -.01em; text-decoration: none; }
+    nav .brand svg { width: 42px; height: 28px; }
+    nav .links { display: flex; gap: 22px; font-size: 15px; }
+    nav .links a { text-decoration: none; color: var(--muted); } nav .links a:hover { color: var(--ink); }
+    .hero { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: center; padding: 56px 0 72px; }
+    .hero h1 { font-size: clamp(38px, 5.4vw, 64px); line-height: 1.05; letter-spacing: -.025em; font-weight: 700; margin: 0 0 18px; }
+    .hero .lede { font-size: clamp(17px, 1.7vw, 20px); color: var(--muted); max-width: 32em; margin: 0 0 22px; }
+    .hero .lede b { color: var(--ink); font-weight: 600; }
+    .pill { display: inline-block; background: rgba(242,163,60,.25); color: var(--amber); font-weight: 600; font-size: 15px; padding: 8px 16px; border-radius: 999px; margin: 0 0 28px; }
+    .cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .btn { display: inline-block; text-decoration: none; font-weight: 600; padding: 12px 20px; border-radius: 10px; border: 2px solid var(--ink); }
+    .btn.primary { background: var(--ink); color: var(--sky-top); }
+    .btn:hover { text-decoration: none; transform: translateY(-1px); }
+    .cta .note { font-size: 14px; color: var(--muted); flex-basis: 100%; margin: 4px 0 0; }
+    .hero .mark { width: 100%; max-width: 420px; height: auto; justify-self: center; }
+
+    section { padding: 72px 0; }
+    section + section { border-top: 1px solid var(--panel-rule); }
+    .eyebrow { font-size: .85rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 600; color: var(--muted); margin: 0 0 10px; }
+    h2 { font-size: clamp(26px, 3.2vw, 36px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 28px; max-width: 22em; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 18px; }
+    .card { background: var(--panel); border: 1px solid var(--panel-rule); border-radius: 12px; padding: 20px 22px; }
+    .card h3 { margin: 0 0 6px; font-size: 1.1rem; }
+    .card h3 span { margin-right: 8px; }
+    .card p { margin: 0; color: var(--muted); font-size: 15.5px; }
+
+    figure { margin: 0; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--panel-rule); }
+    figcaption { margin-top: 12px; color: var(--muted); font-size: 15px; text-align: center; }
+
+    .privacy { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 36px; align-items: start; }
+    .privacy ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+    .privacy li { background: var(--panel); border: 1px solid var(--panel-rule); border-radius: 10px; padding: 12px 16px; font-size: 15.5px; }
+    .privacy li code { margin-right: 8px; }
+
+    .steps { counter-reset: step; display: grid; gap: 22px; }
+    .step { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 16px; align-items: start; }
+    .step::before { counter-increment: step; content: counter(step); width: 40px; height: 40px; border-radius: 50%; background: var(--sun); color: #2b2823; font-weight: 700; display: grid; place-items: center; font-size: 18px; }
+    .step h3 { margin: 6px 0 8px; font-size: 1.15rem; }
+    .step p { margin: 0 0 12px; color: var(--muted); font-size: 15.5px; }
+
+    .runs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 18px; }
+
+    footer { border-top: 6px solid var(--ink); padding: 28px 0 44px; font-size: 14px; color: var(--muted); }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 28px; justify-content: space-between; }
+    footer a { text-decoration: none; } footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 800px) {
+      .hero { grid-template-columns: 1fr; padding: 32px 0 48px; }
+      .hero .mark { max-width: 260px; order: -1; }
+      .privacy { grid-template-columns: 1fr; }
+      nav .links a:not(:last-child) { display: none; }
+      section { padding: 52px 0; }
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <clipPath id="horizon"><rect x="0" y="0" width="240" height="118"/></clipPath>
+      <clipPath id="body"><ellipse cx="0" cy="22" rx="18" ry="15"/></clipPath>
+      <symbol id="robin" viewBox="0 0 240 160">
+        <g stroke="#f2b544" stroke-width="6" stroke-linecap="round" clip-path="url(#horizon)">
+          <line x1="120" y1="30" x2="120" y2="14"/><line x1="72" y1="48" x2="60" y2="36"/><line x1="168" y1="48" x2="180" y2="36"/><line x1="52" y1="92" x2="34" y2="88"/><line x1="188" y1="92" x2="206" y2="88"/>
+        </g>
+        <path d="M 56 118 A 64 64 0 0 1 184 118 Z" fill="#f2a33c"/>
+        <line x1="16" y1="118" x2="224" y2="118" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+        <g transform="translate(64 72)">
+          <line x1="-4" y1="34" x2="-4" y2="46" stroke="#3d3a34" stroke-width="2.5" stroke-linecap="round"/><line x1="5" y1="34" x2="5" y2="46" stroke="#3d3a34" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M -12 16 L -34 26 L -28 32 L -10 26 Z" fill="#4a4640"/>
+          <ellipse cx="0" cy="22" rx="18" ry="15" fill="#4a4640"/>
+          <circle cx="11" cy="31" r="15" fill="#d95d39" clip-path="url(#body)"/>
+          <circle cx="12" cy="6" r="10" fill="#4a4640"/>
+          <path d="M 16 -1 A 10 10 0 0 1 21 11 L 12 8 Z" fill="#d95d39"/>
+          <path d="M 21 4 L 31 7 L 21 10 Z" fill="#e8a33d"/>
+          <circle cx="13" cy="3.5" r="1.9" fill="#fffdf7"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
+  <header class="sky">
+    <div class="wrap">
+      <nav>
+        <a class="brand" href="/"><svg aria-hidden="true"><use href="#robin"/></svg>sunup</a>
+        <div class="links"><a href="#features">Features</a><a href="#privacy">Privacy</a><a href="#setup">Setup</a><a href="https://github.com/briancorbin/sunup">GitHub</a></div>
+      </nav>
+      <div class="hero">
+        <div>
+          <h1>Async daily check&#8209;ins for Slack. Yours to run.</h1>
+          <p class="lede">At a time you choose, sunup DMs each teammate a short form in their own timezone, then posts one tidy digest to the channel. Blockers are tracked until someone resolves them. <b>Open source, self-hosted, free. No per-seat pricing, ever.</b></p>
+          <div class="pill">🔒 No message-reading scopes, ever</div>
+          <div class="cta">
+            <a class="btn primary" href="#setup">Deploy your own in 15 minutes</a>
+            <a class="btn" href="https://github.com/briancorbin/sunup">View on GitHub</a>
+            <p class="note">sunup isn't a hosted service. You run it, on Cloudflare's free tier or plain Node, and your team's data stays in your infrastructure.</p>
+          </div>
+        </div>
+        <svg class="mark" viewBox="0 0 240 160" aria-label="sunup: a robin perched on the rising sun"><use href="#robin"/></svg>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="features">
+      <div class="wrap">
+        <p class="eyebrow">What it does</p>
+        <h2>The standup, without the meeting.</h2>
+        <div class="grid">
+          <div class="card"><h3><span>☀️</span>Async check-ins</h3><p>Each participant is prompted at the chosen hour in their own timezone and answers a short form, with questions you configure, whenever suits them.</p></div>
+          <div class="card"><h3><span>📰</span>Channel digest</h3><p>At digest time, one message summarizes everyone's answers in the team channel. Check in late and the digest updates in place to include you.</p></div>
+          <div class="card"><h3><span>🚧</span>Blocker tracking</h3><p>A blocker isn't a one-day mention. The next prompt asks "still blocked?", the digest shows every open blocker with its age, and the App Home has a live board.</p></div>
+          <div class="card"><h3><span>⏰</span>Nudges and vacation mode</h3><p>Non-responders get one friendly reminder before the digest. <code>/sunup snooze 5</code> pauses your prompts and keeps you out of "waiting on" lists.</p></div>
+          <div class="card"><h3><span>🎉</span>Kudos</h3><p><code>/kudos @teammate for shipping the thing</code> posts a celebration and feeds a 30-day leaderboard.</p></div>
+          <div class="card"><h3><span>📈</span>Mood pulse</h3><p>An optional 1 to 5 mood question, shown in the digest only as a team average, and only once three or more people have answered.</p></div>
+          <div class="card"><h3><span>🌇</span>/sundown</h3><p>An evening checkout twin: what shipped, what's carrying over, wins worth celebrating. Same engine, sunset tone. A channel can run both.</p></div>
+          <div class="card"><h3><span>📆</span>Weekly retro</h3><p>On the week's last scheduled day: participation by day, mood trend, every blocker from the week, kudos totals and streak leaders.</p></div>
+          <div class="card"><h3><span>📊</span>Reports and export</h3><p><code>/sunup report</code> mints a 24-hour signed link to a charted, printable team report. <code>/sunup export</code> gives you the full history as CSV.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <figure>
+          <img src="../../public/report.png" width="1200" height="760" alt="A sunup report page: stat cards, participation bar chart, mood trend line, blocker aging, streak and kudos leaderboards" loading="lazy">
+          <figcaption>The <code>/sunup report</code> page, served by your own instance behind a 24-hour signed link. Inline SVG charts, nothing external.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="privacy">
+      <div class="wrap privacy">
+        <div>
+          <p class="eyebrow">Privacy by design</p>
+          <h2>It only ever sees what people type into its own forms.</h2>
+          <p style="color:var(--muted);margin:0;">sunup requests no message-reading scopes. It can't see your channels, your DMs or your history. Four scopes, and one of them is just for timezones. Data retention is a single setting; purge anything older than N days automatically.</p>
+        </div>
+        <ul aria-label="Slack scopes sunup requests">
+          <li><code>chat:write</code> post prompts and digests</li>
+          <li><code>commands</code> the <code>/sunup</code>, <code>/sundown</code> and <code>/kudos</code> slash commands</li>
+          <li><code>im:write</code> open the DM that carries the check-in form</li>
+          <li><code>users:read</code> timezones, so each person is prompted at their own morning</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="setup">
+      <div class="wrap">
+        <p class="eyebrow">Setup</p>
+        <h2>Your Slack app, your Cloudflare account, your database. About 15 minutes.</h2>
+        <div class="steps">
+          <div class="step">
+            <div>
+              <h3>Deploy the Worker</h3>
+              <p>You need a Cloudflare account (the free tier is far more than enough), Node 18 or later, and permission to install a custom app in your Slack workspace.</p>
+<pre><code><span class="p">$ </span>git clone https://github.com/briancorbin/sunup.git &amp;&amp; cd sunup
+<span class="p">$ </span>npm install &amp;&amp; npx wrangler login
+<span class="c"># create the database, then paste its id into apps/cloudflare/wrangler.jsonc</span>
+<span class="p">$ </span>npx wrangler d1 create sunup --cwd apps/cloudflare
+<span class="p">$ </span>npm run db:migrate --workspace apps/cloudflare
+<span class="p">$ </span>npm run deploy</code></pre>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Create the Slack app from the manifest</h3>
+              <p>Put your Worker URL into <code>slack-app-manifest.yml</code>, then at api.slack.com/apps choose <b>Create New App → From a manifest</b> and paste it in. Install it to your workspace and grab the Bot User OAuth Token and the Signing Secret.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Wire them together</h3>
+<pre><code><span class="p">$ </span>cd apps/cloudflare
+<span class="p">$ </span>npx wrangler secret put SLACK_BOT_TOKEN
+<span class="p">$ </span>npx wrangler secret put SLACK_SIGNING_SECRET</code></pre>
+            </div>
+          </div>
+          <div class="step">
+            <div>
+              <h3>Use it</h3>
+              <p>In your team channel, invite the app and run setup. Teammates join with one command. <code>/sunup help</code> shows everything else.</p>
+<pre><code>/invite @Sunup
+/sunup setup      <span class="c">← creates the check-in with sensible defaults</span>
+/sunup join       <span class="c">← each teammate, once</span></code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <p class="eyebrow">Runs where you want</p>
+        <h2>The bot is portable. The platform is a plugin.</h2>
+        <div class="runs">
+          <div class="card"><h3>Cloudflare Workers</h3><p>The reference deployment: a Worker, a D1 database, a cron trigger. Fits in the free tier.</p></div>
+          <div class="card"><h3>Plain Node</h3><p>The same bot as a Node 24 process with <code>node:sqlite</code> storage and zero native dependencies. A Dockerfile and compose file are included.</p></div>
+          <div class="card"><h3>Somewhere else</h3><p>An adapter is an HTTP entry, a Storage implementation and a trigger, about 150 lines. Lambda, Deno and Bun ports are welcome.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>sunup · MIT licensed · <a href="https://github.com/briancorbin/sunup">GitHub</a></span>
+      <span><a href="https://bestcoast.dev">Best Coast Software LLC</a> · Redondo Beach, CA</span>
+    </div>
+  </footer>
+</body>
+</html>

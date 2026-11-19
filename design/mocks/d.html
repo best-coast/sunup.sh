@@ -1,0 +1,152 @@
+<!doctype html>
+<!-- Direction D: "README, but designed". Brutalist/dev-first, text-only hero, terminal block IS the pitch. Fonts: JetBrains Mono (structure) + Inter (body). -->
+<!-- Palette departure: deliberately drops the sky gradient and robin/ink palette; only black on white (dark: #111) + sunup orange #f2a33c. Light AND dark via prefers-color-scheme. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sunup — async check-ins you host yourself</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fff; --ink:#000; --muted:#555; --sun:#f2a33c;
+  --term-bg:#000; --term-fg:#f2f2f2; --term-dim:#8a8a8a;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:Inter,system-ui,-apple-system,Segoe UI,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--paper:#111; --ink:#f4f4f4; --muted:#a0a0a0; --term-bg:#000; --term-fg:#f2f2f2}
+}
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+main,header,footer{max-width:760px;margin:0 auto;padding:0 20px}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--sun);text-decoration-thickness:3px;text-underline-offset:3px}
+a:hover{background:var(--sun);color:#000}
+code,.mono{font-family:var(--mono)}
+section{border-top:1px solid var(--ink);padding:48px 0 56px}
+h2{font:700 13px/1 var(--mono);text-transform:uppercase;letter-spacing:.12em;margin:0 0 28px}
+h2::before{content:"## ";color:var(--sun)}
+mark{background:var(--sun);color:#000;padding:0 .2em}
+
+/* hero */
+.hero{padding-top:40px;padding-bottom:56px}
+.mark{display:block;width:72px;height:auto;color:var(--ink);margin-bottom:28px}
+h1{font:900 clamp(56px,14vw,72px)/.95 var(--sans);letter-spacing:-.045em;margin:0 0 20px}
+.lede{font:400 19px/1.5 var(--sans);margin:0 0 32px;max-width:34em}
+.lede b{font-weight:500;text-decoration:underline;text-decoration-color:var(--sun);text-decoration-thickness:3px;text-underline-offset:3px}
+.term{background:var(--term-bg);color:var(--term-fg);border:1px solid var(--ink);font:400 14px/1.75 var(--mono);padding:20px 22px;overflow-x:auto;margin:0}
+.term .c{color:var(--term-dim)}
+.term .p{color:var(--sun);user-select:none}
+.term .o{color:var(--sun)}
+.after{font:400 13px/1.6 var(--mono);color:var(--muted);margin:14px 0 0}
+.after a{color:var(--ink)}
+
+/* definition list */
+dl{margin:0;display:grid;grid-template-columns:150px 1fr;border-top:1px solid var(--ink)}
+dt,dd{margin:0;padding:14px 0;border-bottom:1px solid var(--ink)}
+dt{font:700 15px/1.6 var(--mono)}
+dd{padding-left:20px}
+dd code{font-size:.88em;background:none;border:1px solid var(--ink);padding:0 .3em}
+
+/* privacy box */
+.box{border:1px solid var(--ink);padding:24px 26px}
+.scopes{list-style:none;margin:0 0 22px;padding:0;font:400 15px/1.5 var(--mono)}
+.scopes li{display:grid;grid-template-columns:150px 1fr;gap:4px 16px;padding:8px 0;border-bottom:1px dashed var(--ink)}
+.scopes li:last-child{border-bottom:0}
+.scopes b{font-weight:700}
+.scopes span{font-family:var(--sans);color:var(--muted)}
+.box p{margin:0;font-size:19px;font-weight:500}
+
+/* table */
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:11px 14px 11px 0;border-bottom:1px solid var(--ink);vertical-align:top}
+th{font:700 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em;border-top:1px solid var(--ink)}
+td:first-child{font:700 14px/1.6 var(--mono);white-space:nowrap;padding-right:24px}
+
+footer{border-top:1px solid var(--ink);padding-top:22px;padding-bottom:56px;font:400 13px/1.6 var(--mono);display:flex;flex-wrap:wrap;gap:6px 14px}
+footer .sep{color:var(--sun)}
+
+@media (max-width:560px){
+  body{font-size:16px}
+  dl,.scopes li{grid-template-columns:1fr}
+  dt{border-bottom:0;padding-bottom:0}
+  dd{padding-left:0;padding-top:2px}
+  .box{padding:18px}
+  .term{font-size:12.5px;padding:16px}
+}
+</style>
+</head>
+<body>
+<header></header>
+<main>
+
+<section class="hero" style="border-top:0">
+  <svg class="mark" viewBox="0 0 240 160" aria-label="sunup mark: a robin on a rising sun"><defs><clipPath id="hz"><rect width="240" height="118"/></clipPath><clipPath id="bd"><ellipse cx="0" cy="22" rx="18" ry="15"/></clipPath></defs><g stroke="#f2b544" stroke-width="6" stroke-linecap="round" clip-path="url(#hz)"><line x1="120" y1="30" x2="120" y2="14"/><line x1="72" y1="48" x2="60" y2="36"/><line x1="168" y1="48" x2="180" y2="36"/><line x1="52" y1="92" x2="34" y2="88"/><line x1="188" y1="92" x2="206" y2="88"/></g><path d="M 56 118 A 64 64 0 0 1 184 118 Z" fill="#f2a33c"/><line x1="16" y1="118" x2="224" y2="118" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><g transform="translate(64 72)"><line x1="-4" y1="34" x2="-4" y2="46" stroke="#3d3a34" stroke-width="2.5" stroke-linecap="round"/><line x1="5" y1="34" x2="5" y2="46" stroke="#3d3a34" stroke-width="2.5" stroke-linecap="round"/><path d="M -12 16 L -34 26 L -28 32 L -10 26 Z" fill="#4a4640"/><ellipse cx="0" cy="22" rx="18" ry="15" fill="#4a4640"/><circle cx="11" cy="31" r="15" fill="#d95d39" clip-path="url(#bd)"/><circle cx="12" cy="6" r="10" fill="#4a4640"/><path d="M 16 -1 A 10 10 0 0 1 21 11 L 12 8 Z" fill="#d95d39"/><path d="M 21 4 L 31 7 L 21 10 Z" fill="#e8a33d"/><circle cx="13" cy="3.5" r="1.9" fill="#fffdf7"/></g></svg>
+  <h1>sunup</h1>
+  <p class="lede">Async daily check-ins for Slack, <b>deployed to your own Cloudflare account</b>. Open source, MIT. A DailyBot alternative you own: no hosted service, no per-seat bill.</p>
+<pre class="term"><span class="c"># about 15 minutes, free tier</span>
+<span class="p">$ </span>git clone https://github.com/briancorbin/sunup
+<span class="p">$ </span>cd sunup &amp;&amp; npm install
+<span class="p">$ </span>npx wrangler login
+<span class="p">$ </span>npx wrangler d1 create sunup
+<span class="p">$ </span>npm run db:migrate
+<span class="p">$ </span>npm run deploy
+<span class="o">&#10003;</span> <span class="c">live on your *.workers.dev</span></pre>
+  <p class="after">Then: create the Slack app from the bundled manifest, <code>wrangler secret put SLACK_BOT_TOKEN</code> and <code>SLACK_SIGNING_SECRET</code>, <code>/invite @Sunup</code>, <code>/sunup setup</code>. Prefer plain Node? <a href="https://github.com/briancorbin/sunup">That works too</a>.</p>
+</section>
+
+<section>
+  <h2>What you get</h2>
+  <dl>
+    <dt>check-ins</dt><dd>At your chosen hour, in each person's own timezone, sunup DMs a short form. Questions are configurable. One reminder goes out before the digest.</dd>
+    <dt>digest</dt><dd>One tidy message in the channel summarizing everyone's answers. Late check-ins update it in place.</dd>
+    <dt>blockers</dt><dd>Tracked until resolved. The next prompt asks "still blocked?", the digest shows age ("blocked 3 days"), App Home has a live board.</dd>
+    <dt>kudos</dt><dd><code>/kudos @teammate for shipping the thing</code>, with a 30-day leaderboard.</dd>
+    <dt>/sundown</dt><dd>The evening checkout twin of the morning check-in. Plus a weekly retro and an optional 1-5 mood pulse (team average only, 3+ responses).</dd>
+    <dt>report / export</dt><dd><code>/sunup report</code> gives a charted, signed, 24-hour report page. <code>/sunup export</code> gives CSV. Vacation mode: <code>/sunup snooze 5</code>.</dd>
+  </dl>
+</section>
+
+<section>
+  <h2>What it can't see</h2>
+  <div class="box">
+    <ul class="scopes">
+      <li><b>chat:write</b><span>post the digest and DMs</span></li>
+      <li><b>commands</b><span>respond to /sunup, /kudos, /sundown</span></li>
+      <li><b>im:write</b><span>open the check-in DM</span></li>
+      <li><b>users:read</b><span>timezones, so 9am means 9am</span></li>
+    </ul>
+    <p>It only ever sees what people type into <mark>its own forms</mark>.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Commands</h2>
+  <div class="tw">
+  <table>
+    <thead><tr><th>Command</th><th>Does</th></tr></thead>
+    <tbody>
+      <tr><td>/sunup setup</td><td>Configure the channel, hour, and questions.</td></tr>
+      <tr><td>/sunup join</td><td>Opt yourself in to check-ins.</td></tr>
+      <tr><td>/sunup snooze 5</td><td>Vacation mode: skip the next 5 days.</td></tr>
+      <tr><td>/kudos @user for …</td><td>Give kudos; feeds the 30-day leaderboard.</td></tr>
+      <tr><td>/sundown</td><td>Evening checkout.</td></tr>
+      <tr><td>/sunup report</td><td>Charted, signed, 24-hour report page.</td></tr>
+      <tr><td>/sunup export</td><td>Download check-ins as CSV.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+</main>
+<footer>
+  <span>MIT</span><span class="sep">&middot;</span>
+  <a href="https://github.com/briancorbin/sunup">GitHub</a><span class="sep">&middot;</span>
+  <span>Best Coast Software LLC</span>
+</footer>
+</body>
+</html>

@@ -14,3 +14,4 @@ npm run deploy   # needs wrangler login or CLOUDFLARE_API_TOKEN
 ```
 
 Regenerate images: `rsvg-convert -w 1200 -h 630 -o public/og.png social/og.svg` and `rsvg-convert -w 180 -h 180 -o public/apple-touch-icon.png public/favicon.svg`.
+- `design/mocks/` — the four direction mocks (a = the page as shipped; b, c, d were the alternatives).
