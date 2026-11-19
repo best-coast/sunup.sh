@@ -84,9 +84,6 @@
     figcaption { margin-top: 12px; color: var(--muted); font-size: 15px; text-align: center; }
 
     .privacy { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 36px; align-items: start; }
-    .privacy ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
-    .privacy li { background: var(--panel); border: 1px solid var(--panel-rule); border-radius: 10px; padding: 12px 16px; font-size: 15.5px; }
-    .privacy li code { margin-right: 8px; }
 
     .steps { counter-reset: step; display: grid; gap: 22px; }
     .step { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 16px; align-items: start; }
@@ -95,6 +92,41 @@
     .step p { margin: 0 0 12px; color: var(--muted); font-size: 15.5px; }
 
     .runs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 18px; }
+
+    /* digest card (from direction B), in sunup's tokens */
+    .digest-wrap { max-width: 680px; margin: 0 auto; }
+    .slack { background: var(--panel); border: 1px solid var(--panel-rule); border-radius: 12px; overflow: hidden; font-size: 15px; line-height: 1.45; box-shadow: 0 18px 50px -30px rgba(61,58,52,.45); }
+    .s-head { padding: 10px 16px; border-bottom: 1px solid var(--panel-rule); font-weight: 700; } .s-head small { font-weight: 400; color: var(--muted); margin-left: 8px; }
+    .s-msg { display: grid; grid-template-columns: 40px 1fr; gap: 12px; padding: 14px 16px 16px; }
+    .s-msg .bot { width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(var(--sky-top), var(--sky-bottom)); display: grid; place-items: center; color: var(--ink); } .s-msg .bot svg { width: 34px; height: 24px; }
+    .s-meta { display: flex; gap: 8px; align-items: baseline; } .s-meta b { font-weight: 800; } .s-meta .app { font-size: 10px; font-weight: 700; background: rgba(138,133,120,.18); color: var(--muted); padding: 1px 4px; border-radius: 3px; } .s-meta time { font-size: 12px; color: var(--muted); }
+    .s-body .title { font-weight: 800; margin-top: 4px; }
+    .ctx { font-size: 13px; color: var(--muted); }
+    .s-body hr { border: 0; border-top: 1px solid var(--panel-rule); margin: 10px 0; }
+    .person { display: flex; gap: 10px; align-items: flex-start; }
+    .av { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 12px; margin-top: 2px; }
+    .person b { font-weight: 800; }
+    .q { display: grid; grid-template-columns: 76px 1fr; gap: 8px; font-size: 14px; } .q i { font-style: normal; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+    .mention { color: #1264a3; background: rgba(29,155,209,.12); padding: 0 3px; border-radius: 3px; }
+    .blockers { border-left: 3px solid var(--sun); background: rgba(242,163,60,.12); padding: 10px 12px; border-radius: 0 8px 8px 0; font-size: 14px; } .blockers b { display: block; margin-bottom: 4px; } .age { color: var(--robin); font-weight: 700; }
+    .kudos { display: flex; gap: 8px; font-size: 14px; }
+    .cap { margin: 14px 0 0; text-align: center; color: var(--muted); font-size: 15px; }
+
+    /* numbered feature cards (from direction C) */
+    #features .grid { counter-reset: f; }
+    #features .card { position: relative; }
+    #features .card::before { counter-increment: f; content: counter(f, decimal-leading-zero); position: absolute; top: 16px; right: 18px; font: 500 12px var(--mono); letter-spacing: .1em; color: var(--muted); }
+
+    /* scopes box + command table (from direction D) */
+    .box { border: 1.5px solid var(--ink); border-radius: 12px; padding: 20px 22px; background: var(--panel); }
+    .scopes { list-style: none; margin: 0 0 18px; padding: 0; }
+    .scopes li { display: grid; grid-template-columns: 130px 1fr; gap: 4px 16px; padding: 9px 0; border-bottom: 1px dashed var(--panel-rule); font-size: 15px; }
+    .scopes li:last-child { border-bottom: 0; } .scopes li code { background: none; padding: 0; font-weight: 700; } .scopes li span { color: var(--muted); }
+    .box p { margin: 0; font-size: 18px; font-weight: 600; } .box mark { background: var(--sun); color: #2b2823; padding: 0 .25em; border-radius: 3px; }
+    table.cmds { width: 100%; border-collapse: collapse; font-size: 15px; }
+    table.cmds th { text-align: left; font: 600 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 0 12px 10px 0; border-bottom: 1.5px solid var(--ink); }
+    table.cmds td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--panel-rule); vertical-align: top; } table.cmds td:first-child { white-space: nowrap; width: 38%; } table.cmds code { background: none; padding: 0; font-weight: 600; }
+    @media (max-width: 800px) { .scopes li { grid-template-columns: 1fr; } table.cmds td:first-child { white-space: normal; width: auto; } .table-scroll { overflow-x: auto; } }
 
     footer { border-top: 6px solid var(--ink); padding: 28px 0 44px; font-size: 14px; color: var(--muted); }
     footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 28px; justify-content: space-between; }
@@ -157,6 +189,56 @@
   </header>
 
   <main>
+    <section id="digest">
+      <div class="wrap">
+        <p class="eyebrow" style="text-align:center">What your channel sees</p>
+        <h2 style="text-align:center;margin-left:auto;margin-right:auto;">One message a day. Everyone's answers, every open blocker, who's still out.</h2>
+        <figure class="digest-wrap">
+          <div class="slack" role="img" aria-label="Example sunup digest in a Slack channel">
+            <div class="s-head"># team-mobile <small>4 members</small></div>
+            <div class="s-msg">
+              <div class="bot"><svg viewBox="0 0 240 160" aria-hidden="true"><use href="#robin"/></svg></div>
+              <div class="s-body">
+                <div class="s-meta"><b>sunup</b><span class="app">APP</span><time>9:30 AM</time></div>
+                <div class="title">&#9728;&#65039; Daily check-in &middot; Tue</div>
+                <div class="ctx">3 of 4 checked in &middot; Wen is out until Thursday</div>
+                <hr>
+                <div class="person"><div class="av" style="background:#7c3a9e">P</div><div>
+                  <b>Priya</b>
+                  <div class="q"><i>Yesterday</i><span>Wired up the new onboarding flow</span></div>
+                  <div class="q"><i>Today</i><span>Fix the e2e flake, start the settings screen</span></div>
+                  <div class="q"><i>Blockers</i><span>CI is flaky on e2e</span></div>
+                </div></div>
+                <hr>
+                <div class="person"><div class="av" style="background:#2b7a5f">S</div><div>
+                  <b>Sam</b>
+                  <div class="q"><i>Yesterday</i><span>Reviewed 4 PRs, shipped the push-token fix</span></div>
+                  <div class="q"><i>Today</i><span>API pagination for the feed</span></div>
+                  <div class="q"><i>Blockers</i><span>None</span></div>
+                </div></div>
+                <hr>
+                <div class="person"><div class="av" style="background:#c2562b">M</div><div>
+                  <b>Marcus</b>
+                  <div class="q"><i>Yesterday</i><span>Profile screen polish</span></div>
+                  <div class="q"><i>Today</i><span>Dark mode pass, waiting on the new icons</span></div>
+                  <div class="q"><i>Blockers</i><span>Need design sign-off from <span class="mention">@Sam</span></span></div>
+                </div></div>
+                <hr>
+                <div class="blockers">
+                  <b>&#128679; Open blockers</b>
+                  &bull; Flaky CI on the e2e suite &mdash; <span class="age">blocked 3 days</span>, Priya
+                </div>
+                <div class="ctx" style="margin-top:10px"><b>Waiting on:</b> <span class="mention">@Sam</span> (1 item)</div>
+                <hr>
+                <div class="kudos"><span>&#127881;</span><span><b>Kudos</b> &middot; Marcus to Priya: &ldquo;for untangling the release script&rdquo;</span></div>
+                <div class="ctx" style="margin-top:8px">Sent by sunup &middot; late check-ins update this message in place</div>
+              </div>
+            </div>
+          </div>
+          <figcaption class="cap">An example digest. Yours lives in your channel, posted by your own instance.</figcaption>
+        </figure>
+      </div>
+    </section>
     <section id="features">
       <div class="wrap">
         <p class="eyebrow">What it does</p>
@@ -191,12 +273,15 @@
           <h2>It only ever sees what people type into its own forms.</h2>
           <p style="color:var(--muted);margin:0;">sunup requests no message-reading scopes. It can't see your channels, your DMs or your history. Four scopes, and one of them is just for timezones. Data retention is a single setting; purge anything older than N days automatically.</p>
         </div>
-        <ul aria-label="Slack scopes sunup requests">
-          <li><code>chat:write</code> post prompts and digests</li>
-          <li><code>commands</code> the <code>/sunup</code>, <code>/sundown</code> and <code>/kudos</code> slash commands</li>
-          <li><code>im:write</code> open the DM that carries the check-in form</li>
-          <li><code>users:read</code> timezones, so each person is prompted at their own morning</li>
-        </ul>
+        <div class="box" aria-label="Slack scopes sunup requests">
+          <ul class="scopes">
+            <li><code>chat:write</code><span>post prompts and digests</span></li>
+            <li><code>commands</code><span>the <code>/sunup</code>, <code>/sundown</code> and <code>/kudos</code> slash commands</span></li>
+            <li><code>im:write</code><span>open the DM that carries the check-in form</span></li>
+            <li><code>users:read</code><span>timezones, so each person is prompted at their own morning</span></li>
+          </ul>
+          <p>It only ever sees what people type into <mark>its own forms</mark>.</p>
+        </div>
       </div>
     </section>
 
@@ -240,6 +325,29 @@
 /sunup join       <span class="c">← each teammate, once</span></code></pre>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="commands">
+      <div class="wrap">
+        <p class="eyebrow">Commands</p>
+        <h2>Everything is a slash command. <code>/sunup help</code> lists the rest.</h2>
+        <div class="table-scroll">
+        <table class="cmds">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>/sunup</code></td><td>Submit, or edit, today's check-in.</td></tr>
+            <tr><td><code>/sunup setup [name]</code></td><td>Create a check-in for the current channel with sensible defaults.</td></tr>
+            <tr><td><code>/sunup join</code> / <code>leave</code></td><td>Manage your participation.</td></tr>
+            <tr><td><code>/sunup config</code></td><td>Open the settings editor: timepickers, day checkboxes, question editing. Quick edits like <code>/sunup config prompt 08:30</code> work too.</td></tr>
+            <tr><td><code>/sunup snooze 5</code> / <code>snooze off</code></td><td>Vacation mode. Pause your prompts and skip "waiting on" lists.</td></tr>
+            <tr><td><code>/sunup report [week|month|quarter]</code></td><td>A charted report page behind a 24-hour signed link. Add <code>share</code> to post it in the channel.</td></tr>
+            <tr><td><code>/sunup export</code></td><td>CSV of the channel's full history, 15-minute signed link.</td></tr>
+            <tr><td><code>/sundown &hellip;</code></td><td>The evening checkout. Same subcommands as <code>/sunup</code>.</td></tr>
+            <tr><td><code>/kudos @user &lt;message&gt;</code></td><td>Celebrate a teammate. Feeds the 30-day leaderboard.</td></tr>
+          </tbody>
+        </table>
         </div>
       </div>
     </section>
