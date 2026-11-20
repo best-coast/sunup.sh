@@ -106,7 +106,7 @@
     .person { display: flex; gap: 10px; align-items: flex-start; }
     .av { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 12px; margin-top: 2px; }
     .person b { font-weight: 800; }
-    .q { display: grid; grid-template-columns: 76px 1fr; gap: 8px; font-size: 14px; } .q i { font-style: normal; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+    .q { font-size: 14px; margin-top: 4px; } .q i { display: block; font-style: normal; font-weight: 700; font-size: 13px; } .q > span { display: block; border-left: 3px solid var(--panel-rule); padding-left: 8px; }
     .mention { color: #1264a3; background: rgba(29,155,209,.12); padding: 0 3px; border-radius: 3px; }
     .blockers { border-left: 3px solid var(--sun); background: rgba(242,163,60,.12); padding: 10px 12px; border-radius: 0 8px 8px 0; font-size: 14px; } .blockers b { display: block; margin-bottom: 4px; } .age { color: var(--robin); font-weight: 700; }
     .kudos { display: flex; gap: 8px; font-size: 14px; }
@@ -192,50 +192,46 @@
     <section id="digest">
       <div class="wrap">
         <p class="eyebrow" style="text-align:center">What your channel sees</p>
-        <h2 style="text-align:center;margin-left:auto;margin-right:auto;">One message a day. Everyone's answers, every open blocker, who's still out.</h2>
+        <h2 style="text-align:center;margin-left:auto;margin-right:auto;">One message a day. Everyone's answers, every open blocker, who hasn't checked in yet.</h2>
         <figure class="digest-wrap">
-          <div class="slack" role="img" aria-label="Example sunup digest in a Slack channel">
+          <div class="slack" role="img" aria-label="Example sunup digest in a Slack channel: each person's answers to the check-in questions, a blockers section, who is still being waited on, and the team mood">
             <div class="s-head"># team-mobile <small>4 members</small></div>
             <div class="s-msg">
               <div class="bot"><svg viewBox="0 0 240 160" aria-hidden="true"><use href="#robin"/></svg></div>
               <div class="s-body">
-                <div class="s-meta"><b>sunup</b><span class="app">APP</span><time>9:30 AM</time></div>
-                <div class="title">&#9728;&#65039; Daily check-in &middot; Tue</div>
-                <div class="ctx">3 of 4 checked in &middot; Wen is out until Thursday</div>
+                <div class="s-meta"><b>sunup</b><span class="app">APP</span><time>11:30 AM</time></div>
+                <div class="title">&#9728;&#65039; Daily Check-in &mdash; Tuesday, Jul 21</div>
                 <hr>
                 <div class="person"><div class="av" style="background:#7c3a9e">P</div><div>
-                  <b>Priya</b>
-                  <div class="q"><i>Yesterday</i><span>Wired up the new onboarding flow</span></div>
-                  <div class="q"><i>Today</i><span>Fix the e2e flake, start the settings screen</span></div>
-                  <div class="q"><i>Blockers</i><span>CI is flaky on e2e</span></div>
+                  <b><span class="mention">@Priya</span></b>
+                  <div class="q"><i>What did you get done since your last check-in?</i><span>Wired up the new onboarding flow</span></div>
+                  <div class="q"><i>What are you focusing on today?</i><span>Fix the e2e flake, start the settings screen</span></div>
+                  <div class="q"><i>Anything blocking you?</i><span>CI is flaky on e2e</span></div>
                 </div></div>
                 <hr>
                 <div class="person"><div class="av" style="background:#2b7a5f">S</div><div>
-                  <b>Sam</b>
-                  <div class="q"><i>Yesterday</i><span>Reviewed 4 PRs, shipped the push-token fix</span></div>
-                  <div class="q"><i>Today</i><span>API pagination for the feed</span></div>
-                  <div class="q"><i>Blockers</i><span>None</span></div>
+                  <b><span class="mention">@Sam</span></b>
+                  <div class="q"><i>What did you get done since your last check-in?</i><span>Reviewed 4 PRs, shipped the push-token fix</span></div>
+                  <div class="q"><i>What are you focusing on today?</i><span>API pagination for the feed</span></div>
+                  <div class="q"><i>Anything blocking you?</i><span>None</span></div>
                 </div></div>
                 <hr>
                 <div class="person"><div class="av" style="background:#c2562b">M</div><div>
-                  <b>Marcus</b>
-                  <div class="q"><i>Yesterday</i><span>Profile screen polish</span></div>
-                  <div class="q"><i>Today</i><span>Dark mode pass, waiting on the new icons</span></div>
-                  <div class="q"><i>Blockers</i><span>Need design sign-off from <span class="mention">@Sam</span></span></div>
+                  <b><span class="mention">@Marcus</span></b>
+                  <div class="q"><i>What did you get done since your last check-in?</i><span>Profile screen polish</span></div>
+                  <div class="q"><i>What are you focusing on today?</i><span>Dark mode pass, waiting on the new icons</span></div>
+                  <div class="q"><i>Anything blocking you?</i><span>Need design sign-off from <span class="mention">@Sam</span></span></div>
                 </div></div>
                 <hr>
                 <div class="blockers">
-                  <b>&#128679; Open blockers</b>
-                  &bull; Flaky CI on the e2e suite &mdash; <span class="age">blocked 3 days</span>, Priya
+                  <b>&#128679; Blockers</b>
+                  &bull; <span class="mention">@Priya</span>: CI is flaky on e2e <i class="age">(blocked 3 days)</i>
                 </div>
-                <div class="ctx" style="margin-top:10px"><b>Waiting on:</b> <span class="mention">@Sam</span> (1 item)</div>
-                <hr>
-                <div class="kudos"><span>&#127881;</span><span><b>Kudos</b> &middot; Marcus to Priya: &ldquo;for untangling the release script&rdquo;</span></div>
-                <div class="ctx" style="margin-top:8px">Sent by sunup &middot; late check-ins update this message in place</div>
+                <div class="ctx" style="margin-top:10px">Waiting on: <span class="mention">@Wen</span> &nbsp; &bull; &nbsp; Team mood: &#128578; 3.7/5</div>
               </div>
             </div>
           </div>
-          <figcaption class="cap">An example digest. Yours lives in your channel, posted by your own instance.</figcaption>
+          <figcaption class="cap">An example digest, posted by your own instance. Check in late and this same message updates in place.</figcaption>
         </figure>
       </div>
     </section>
@@ -251,8 +247,8 @@
           <div class="card"><h3><span>🎉</span>Kudos</h3><p><code>/kudos @teammate for shipping the thing</code> posts a celebration and feeds a 30-day leaderboard.</p></div>
           <div class="card"><h3><span>📈</span>Mood pulse</h3><p>An optional 1 to 5 mood question, shown in the digest only as a team average, and only once three or more people have answered.</p></div>
           <div class="card"><h3><span>🌇</span>/sundown</h3><p>An evening checkout twin: what shipped, what's carrying over, wins worth celebrating. Same engine, sunset tone. A channel can run both.</p></div>
-          <div class="card"><h3><span>📆</span>Weekly retro</h3><p>On the week's last scheduled day: participation by day, mood trend, every blocker from the week, kudos totals and streak leaders.</p></div>
-          <div class="card"><h3><span>📊</span>Reports and export</h3><p><code>/sunup report</code> mints a 24-hour signed link to a charted, printable team report. <code>/sunup export</code> gives you the full history as CSV.</p></div>
+          <div class="card"><h3><span>📆</span>Weekly retro</h3><p>On the week's last scheduled day: participation by day, mood trend, the week's blockers, kudos totals and streak leaders.</p></div>
+          <div class="card"><h3><span>📊</span>Reports and export</h3><p><code>/sunup report</code> mints a 24-hour signed link to a charted, printable team report. <code>/sunup export</code> gives you the channel's history as CSV (most recent 10,000 check-ins).</p></div>
         </div>
       </div>
     </section>
@@ -271,14 +267,14 @@
         <div>
           <p class="eyebrow">Privacy by design</p>
           <h2>It only ever sees what people type into its own forms.</h2>
-          <p style="color:var(--muted);margin:0;">sunup requests no message-reading scopes. It can't see your channels, your DMs or your history. Four scopes, and one of them is just for timezones. Data retention is a single setting; purge anything older than N days automatically.</p>
+          <p style="color:var(--muted);margin:0;">sunup requests no message-reading scopes. It can't see your channels, your DMs or your history. Four scopes, and one of them is just for timezones and display names. Data retention is a single setting; purge anything older than N days automatically.</p>
         </div>
         <div class="box" aria-label="Slack scopes sunup requests">
           <ul class="scopes">
             <li><code>chat:write</code><span>post prompts and digests</span></li>
             <li><code>commands</code><span>the <code>/sunup</code>, <code>/sundown</code> and <code>/kudos</code> slash commands</span></li>
             <li><code>im:write</code><span>open the DM that carries the check-in form</span></li>
-            <li><code>users:read</code><span>timezones, so each person is prompted at their own morning</span></li>
+            <li><code>users:read</code><span>timezones and display names &mdash; prompts at each person's own morning, names on reports</span></li>
           </ul>
           <p>It only ever sees what people type into <mark>its own forms</mark>.</p>
         </div>
@@ -293,7 +289,7 @@
           <div class="step">
             <div>
               <h3>Deploy the Worker</h3>
-              <p>You need a Cloudflare account (the free tier is far more than enough), Node 18 or later, and permission to install a custom app in your Slack workspace.</p>
+              <p>You need a Cloudflare account (the free tier is far more than enough), Node 22 or later (24 or later if you run the Node adapter instead of Cloudflare), and permission to install a custom app in your Slack workspace.</p>
 <pre><code><span class="p">$ </span>git clone https://github.com/briancorbin/sunup.git &amp;&amp; cd sunup
 <span class="p">$ </span>npm install &amp;&amp; npx wrangler login
 <span class="c"># create the database, then paste its id into apps/cloudflare/wrangler.jsonc</span>
@@ -314,6 +310,7 @@
 <pre><code><span class="p">$ </span>cd apps/cloudflare
 <span class="p">$ </span>npx wrangler secret put SLACK_BOT_TOKEN
 <span class="p">$ </span>npx wrangler secret put SLACK_SIGNING_SECRET</code></pre>
+              <p>If Slack showed a &#9888;&#65039; next to the request URLs before the secrets existed, hit <b>Retry</b> on the Event Subscriptions page and it turns green.</p>
             </div>
           </div>
           <div class="step">
@@ -343,7 +340,7 @@
             <tr><td><code>/sunup config</code></td><td>Open the settings editor: timepickers, day checkboxes, question editing. Quick edits like <code>/sunup config prompt 08:30</code> work too.</td></tr>
             <tr><td><code>/sunup snooze 5</code> / <code>snooze off</code></td><td>Vacation mode. Pause your prompts and skip "waiting on" lists.</td></tr>
             <tr><td><code>/sunup report [week|month|quarter]</code></td><td>A charted report page behind a 24-hour signed link. Add <code>share</code> to post it in the channel.</td></tr>
-            <tr><td><code>/sunup export</code></td><td>CSV of the channel's full history, 15-minute signed link.</td></tr>
+            <tr><td><code>/sunup export</code></td><td>The channel's history as CSV (most recent 10,000 check-ins), 15-minute signed link.</td></tr>
             <tr><td><code>/sundown &hellip;</code></td><td>The evening checkout. Same subcommands as <code>/sunup</code>.</td></tr>
             <tr><td><code>/kudos @user &lt;message&gt;</code></td><td>Celebrate a teammate. Feeds the 30-day leaderboard.</td></tr>
           </tbody>
@@ -358,8 +355,8 @@
         <h2>The bot is portable. The platform is a plugin.</h2>
         <div class="runs">
           <div class="card"><h3>Cloudflare Workers</h3><p>The reference deployment: a Worker, a D1 database, a cron trigger. Fits in the free tier.</p></div>
-          <div class="card"><h3>Plain Node</h3><p>The same bot as a Node 24 process with <code>node:sqlite</code> storage and zero native dependencies. A Dockerfile and compose file are included.</p></div>
-          <div class="card"><h3>Somewhere else</h3><p>An adapter is an HTTP entry, a Storage implementation and a trigger, about 150 lines. Lambda, Deno and Bun ports are welcome.</p></div>
+          <div class="card"><h3>Plain Node</h3><p>The same bot as a Node 24 process with <code>node:sqlite</code> storage and no database server to run. A Dockerfile and compose file are included.</p></div>
+          <div class="card"><h3>Somewhere else</h3><p>An adapter is an HTTP entry, a Storage implementation and a trigger &mdash; a short entry file plus a few hundred lines of storage. Lambda, Deno and Bun ports are welcome.</p></div>
         </div>
       </div>
     </section>
